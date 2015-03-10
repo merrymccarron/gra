@@ -1,3 +1,8 @@
+# 54953 users from the (recent) Search API (out of ~288000) are in our social landmark followers lists (any)
+# ~19%
+
+#create a dictionary to store the userid and who they follow?
+
 import os
 import sys
 import bisect
@@ -5,41 +10,77 @@ import pandas as pd
 import glob
 
 
-followeridsdf = pd.read_csv('gothamistfollowerids.csv')
-followerslist = followeridsdf['UserID'].tolist()
-followerslistsorted = followerslist.sorted()
-# print followerslist
+followeridsdf = pd.DataFrame(data={'UserID': []})
 
-# data = {'UserID' : []}
-# tweetsdf = pd.DataFrame(data)
-# tweetsdf = pd.read_csv('csv_tweets2015-03-03_15-51-05.csv')
+for followersfile in glob.glob('sociallandmarks/*followerids.csv'):
+	tempfile = pd.read_csv(followersfile, index_col=0)
+	followeridsdf = followeridsdf.append(tempfile)
 
-
-# tweetuserids = tweetsdf['UserID']
+followerslist = followeridsdf['UserID'].values.tolist()
+followerslistsorted = sorted(followerslist)
+# print len(followerslist)
+# print type(followerslistsorted)
+# print 'followers id dataframe for all social landmarks:'
+# print followeridsdf.shape
+##### CHECK TO SEE FORMAT OF FOLLOWERS IDS
 
 data = {'Tweet ID': [], 'UserID': [], 'Location': [], 'Geo': []}
 tweetdf = pd.DataFrame(data)
 
 for csvfile in glob.glob('newcsvs/*.csv'):
-	tempfile = pd.read_csv(csvfile, index_col=1, usecols=['Tweet ID', 'UserID', 'Location', 'Geo'])
+	tempfile = pd.read_csv(csvfile, usecols=['Tweet ID', 'UserID', 'Location', 'Geo'])
 	tweetdf = tweetdf.append(tempfile)
-print 'Done'
-print df.shape
+tweetdf['Tweet ID'] = tweetdf['Tweet ID']
+tweetdf['UserID'] = tweetdf['UserID']
+# print 'Done'
+# print tweetdf.shape
+
+tweetuserids = tweetdf['UserID']
+# ##CHECK TO SEE FORMAT OF FOLLOWER IDS
+# print tweetuserids.head(5)
 
 
+def searchGreaterBinSearch(L, v):
+  lengthOfL = len(L)
+  imin = 0
+  imax = lengthOfL # imax always points to end of array (non inclusive).
+  while imin < imax:
+    # Computes midpoint for roughly equal partition.
+    imid = int((imin + imax) / 2)
+    if v == L[imid]:   # v found at index imid.
+      return L[imid]
+      break
+    elif v < L[imid]:  # Changes imax index to search lower subarray.
+      imax = imid
+    else:              # Changes imin index to search upper subarray.
+      imin = imid + 1
+ 
+  if imin < imax:      # Found v
+    # Handles repetitions: makes imid point to 1st greater than v.
+    while imid < lengthOfL and v == L[imid]:
+      imid += 1
+    # Return userid
+    return L[imid]
+  else:
+    # if userid isn't in list, return -1
+    return -1
 
-
-def binary_search(a, x, lo=0, hi=None):   # can't use a to specify default for hi
-    hi = hi if hi is not None else len(a) # hi defaults to len(a)   
-    pos = bisect.bisect_left(a,x,lo,hi)          # find insertion position
-    return (pos if pos != hi and a[pos] == x else -1)
-
-
-# def bin_search_followers(followerslist):
-# 	for tweetuserid in tweetuserids:
-# 		binary_search(tweetuserid, followerslist, lo=0, high=None)
+usersinsociallandmark = []
 
 for tweetuserid in tweetuserids:
-	binsearchresult = binary_search(followerslist, tweetuserid, lo=0, hi=None)
+	binsearchresult = searchGreaterBinSearch(followerslistsorted, tweetuserid)
+	if binsearchresult != -1:
+		# print binsearchresult
+		usersinsociallandmark.append(binsearchresult)
 
-print binsearchresult
+print len(usersinsociallandmark)
+
+df = pd.DataFrame(data={'UserID': usersinsociallandmark})
+
+df.to_csv('sociallandmarkssearchAPIusersFollowingSL.csv', header=True)
+
+
+
+
+
+
