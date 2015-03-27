@@ -10,12 +10,10 @@ import datetime
 import itertools as it
 import string
 
-#these are my credentials, not the CUSP ones we've been using on other API calls.
-
-CONSUMER_KEY='UuEin53ZlFMxUHHVmbRu1iwrF'
-CONSUMER_SECRET='BDfZeD0aXeaTrnH77ESzJpKm9mNAGaZmukOTTGLjALdDHltVR8'
-ACCESS_TOKEN='27922176-yH551pDKiaHwYesntTewcDghGmMXuaitiQdNRKUyx'
-ACCESS_TOKEN_SECRET='zha0VzXiO9xxMLzIUxSd01CGtyKGcmS3S6BPcSkwBBTNm'
+CONSUMER_KEY='FqjFRT1OHl6xyIGoq9uXSA'
+CONSUMER_SECRET='KuhoVREmf7ngwjOse2JOLJOVXNCi2IVEzQZu2B8'
+ACCESS_TOKEN='114454541-xcjy2sbl7Rr4oIaogsaBrlVL5H4CvcdvOSMy3MnR'
+ACCESS_TOKEN_SECRET='yyBBOJhxgfw9pezZda2hWF94doONSd50y0JoylYjL3rmY'
 
 
 def oauth_req(url, http_method="GET", post_body='', http_headers=None):
@@ -39,17 +37,17 @@ def followersslice(listofFollowers, apicallcount):
 
 
 def getFollowerDetails():
-	followersDF = pd.read_csv('sociallandmarks/BrooklynNetsfollowerids.csv')
+	followersDF = pd.read_csv('sociallandmarks/BrooklynMuseumfollowerids.csv')
 	listofFollowers = followersDF['UserID'].tolist()
 	numberOfFollowers = len(listofFollowers)
-	apicallcount = 4450
+	apicallcount = 3816
 	endOfCurrSlice = apicallcount * 100 + 99
 	baseApiUrl = 'https://api.twitter.com/1.1/users/lookup.json?user_id=' 
 	data = {'UserID' : [], 'location' : [], 'screen_name' : [], 'name': [], 'geo_enabled': []}
 	df = pd.DataFrame(data)
 #checks to see if there's already a file with followers for this user -- if not, creates new csv file
-	if not os.path.isfile('sociallandmarks/BrooklynNetsfollowerdetails.csv'):
-		df.to_csv('sociallandmarks/BrooklynNetsfollowerdetails.csv')
+	if not os.path.isfile('sociallandmarks/BrooklynMuseumfollowerdetails.csv'):
+		df.to_csv('sociallandmarks/BrooklynMuseumfollowerdetails.csv', header = True, columns = ['UserID', 'location', 'screen_name', 'name', 'geo_enabled'], engine='python')
 
 	while endOfCurrSlice < numberOfFollowers:
 		try:
@@ -58,10 +56,10 @@ def getFollowerDetails():
 			queryResults = oauth_req(requestUrl)
 			data = queryResults
 			tempdf = pd.DataFrame(data=data)
-			with open('sociallandmarks/BrooklynNetsfollowerdetails.csv', 'a') as f:
+			with open('sociallandmarks/BrooklynMuseumfollowerdetails.csv', 'a') as f:
 				tempdf['name'] = tempdf['name'].apply(lambda x: x.encode('ascii', 'ignore'))
 				tempdf['location'] = tempdf['location'].apply(lambda x: x.encode('ascii', 'ignore'))
-				tempdf.to_csv(f, header=False, columns = ['id_str', 'location', 'screen_name', 'name', 'geo_enabled'])#, encoding = 'utf-8')
+				tempdf.to_csv(f, header=False, columns = ['id_str', 'location', 'screen_name', 'name', 'geo_enabled'], engine='python')#, encoding = 'utf-8')
 #debugging script
 			print datetime.datetime.now()
 			apicallcount +=1
