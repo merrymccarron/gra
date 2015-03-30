@@ -16,6 +16,7 @@ for followersfile in glob.glob('sociallandmarks/*followerids.csv'):
 	tempfile = pd.read_csv(followersfile, index_col=0)
 	followeridsdf = followeridsdf.append(tempfile)
 
+followeridsdf = followeridsdf.drop_duplicates
 followerslist = followeridsdf['UserID'].values.tolist()
 followerslistsorted = sorted(followerslist)
 # print len(followerslist)
@@ -77,7 +78,7 @@ print len(usersinsociallandmark)
 
 df = pd.DataFrame(data={'UserID': usersinsociallandmark})
 
-df.to_csv('sociallandmarkssearchAPIusersFollowingSL.csv', header=True)
+# df.to_csv('sociallandmarkssearchAPIusersFollowingSL.csv', header=True)
 
 
 

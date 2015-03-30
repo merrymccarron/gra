@@ -8,11 +8,11 @@ data = {'Tweet ID': [], 'UserID': [], 'Location': [], 'Geo': []}
 df = pd.DataFrame(data)
 
 for csvfile in glob.glob('newcsvs/*.csv'):
-	tempfile = pd.read_csv(csvfile, usecols=['Tweet ID', 'UserID', 'Location', 'Geo'])
-	df = df.append(tempfile)
-	csvcount +=1
-	# print csvcount
-	# print csvfile
+    tempfile = pd.read_csv(csvfile, usecols=['Tweet ID', 'UserID', 'Location', 'Geo'])
+    df = df.append(tempfile)
+    csvcount +=1
+    # print csvcount
+    # print csvfile
 # df = df[df.Place != None]
 # df = df.drop_duplicates(['Tweet ID'])
 df['Tweet ID'] = df['Tweet ID'].astype(basestring)
