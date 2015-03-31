@@ -37,7 +37,7 @@ def followers_slice(listofFollowers, apicallcount):
 
 
 def get_follower_details():
-    followersDF = pd.read_csv('sociallandmarks/giantsfollowerids.csv')
+    followersDF = pd.read_csv('sociallandmarks/TimeOutNewYorkfollowerids.csv')
     listofFollowers = followersDF['UserID'].tolist()
     numberOfFollowers = len(listofFollowers)
     apicallcount = 0
@@ -46,8 +46,8 @@ def get_follower_details():
     data = {'UserID' : [], 'location' : [], 'screen_name' : [], 'name': [], 'geo_enabled': []}
     df = pd.DataFrame(data)
 #checks to see if there's already a file with followers for this user -- if not, creates new csv file
-    if not os.path.isfile('sociallandmarks/giantsfollowerdetails.csv'):
-        df.to_csv('sociallandmarks/giantsfollowerdetails.csv', header = True, columns = ['UserID', 'location', 'screen_name', 'name', 'geo_enabled'], engine='python')
+    if not os.path.isfile('sociallandmarks/TimeOutNewYorkfollowerdetails.csv'):
+        df.to_csv('sociallandmarks/TimeOutNewYorkfollowerdetails.csv', header = True, columns = ['UserID', 'location', 'screen_name', 'name', 'geo_enabled'], engine='python')
 
     while endOfCurrSlice < numberOfFollowers:
         try:
@@ -56,7 +56,7 @@ def get_follower_details():
             queryResults = oauth_req(requestUrl)
             data = queryResults
             tempdf = pd.DataFrame(data=data)
-            with open('sociallandmarks/giantsfollowerdetails.csv', 'a') as f:
+            with open('sociallandmarks/TimeOutNewYorkfollowerdetails.csv', 'a') as f:
                 tempdf['name'] = tempdf['name'].apply(lambda x: x.encode('ascii', 'ignore'))
                 tempdf['location'] = tempdf['location'].apply(lambda x: x.encode('ascii', 'ignore'))
                 tempdf.to_csv(f, header=False, columns = ['id_str', 'location', 'screen_name', 'name', 'geo_enabled'], engine='python')#, encoding = 'utf-8')
