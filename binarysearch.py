@@ -41,7 +41,7 @@ tweetuserids = tweetdf['UserID']
 # print tweetuserids.head(5)
 
 
-def binarySearch(L, v):
+def binary_search(L, v):
   lengthOfL = len(L)
   imin = 0
   imax = lengthOfL # imax always points to end of array (non inclusive).
@@ -61,15 +61,17 @@ def binarySearch(L, v):
     while imid < lengthOfL and v == L[imid]:
       imid += 1
     # Return userid
-    return L[imid]
+    # return L[imid]
+    return True
   else:
     # if userid isn't in list, return -1
-    return -1
+    # return -1
+    return False
 
 usersinsociallandmark = []
 
 for tweetuserid in tweetuserids:
-	binsearchresult = binarySearch(followerslistsorted, tweetuserid)
+	binsearchresult = binary_search(followerslistsorted, tweetuserid)
 	if binsearchresult != -1:
 		# print binsearchresult
 		usersinsociallandmark.append(binsearchresult)
