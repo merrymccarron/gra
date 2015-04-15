@@ -8,12 +8,10 @@ import json
 import time
 import datetime
 
-#RAVI's credentials, for now.
-
-CONSUMER_KEY='WCt81NXnk4R7QI9BNtBFWesNH'
-CONSUMER_SECRET='xzVet8D3XWSB9vbc5hNpRpKfhBKIMoVTSlqrrWrIL9NIAaOz2v'
-ACCESS_TOKEN='2874045741-asyKKDeBi1UB7wVS4RQWjBHMnkaQx2MKSePSGwx'
-ACCESS_TOKEN_SECRET='Og2PiZpvnK5FqhQgTPKZKTr0WCYY1Z0tyOA1BvXOWOVG0'
+CONSUMER_KEY='FqjFRT1OHl6xyIGoq9uXSA'
+CONSUMER_SECRET='KuhoVREmf7ngwjOse2JOLJOVXNCi2IVEzQZu2B8'
+ACCESS_TOKEN='114454541-xcjy2sbl7Rr4oIaogsaBrlVL5H4CvcdvOSMy3MnR'
+ACCESS_TOKEN_SECRET='yyBBOJhxgfw9pezZda2hWF94doONSd50y0JoylYjL3rmY'
 
 
 def oauth_req(url, http_method="GET", post_body='', http_headers=None):
@@ -60,7 +58,6 @@ def getAllFollowers(username):
 #debugging: making sure the cursor is changing, save most recent cursor in case script breaks before completing
 			print 'latest cursor:' + cursor
 			print 'sleeping now'
-# sleeping one additional second than strictly necessary, just for kicks/to be safe.
 			time.sleep(60)
 
 		except:
