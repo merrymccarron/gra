@@ -1,26 +1,25 @@
 require('RColorBrewer')
-SLmatrix <- read.csv('dedupematrix.csv', row.names=1)
+SLmatrix <- read.csv('dedupematrix.csv')
 attach(SLmatrix)
 
-logit1 <- glm(formula=isnewyorker ~ BrooklynMuseum, data=SLmatrix, family=binomial)
-summary(logit1)
-
-summary(SLmatrix)
-coef(logit1)
+# logit1 <- glm(formula=isnewyorker ~ BrooklynMuseum, data=SLmatrix, family=binomial)
+# summary(logit1)
+# 
+# summary(SLmatrix)
+# coef(logit1)
 
 newyorkers <- subset(SLmatrix, isnewyorker == 1)
-vecny <- apply()
 
 nonNYandUnKnown <- subset(SLmatrix, isnewyorker == 0)
 
-require('graphics')
-logitnewyorkers <- glm(formula=isnewyorker ~ Brokelyn + BrooklynBased + BrooklynMuseum + BrooklynNets + citibikenyc + columbia + EmpireStateBldg + FDNY + giants + gothamist + Mets + MTA + nycgov + NYCMayorsOffice + NYCParks + NYCTBus + NYCTSubway + nydailynews + nyjets + NYKnicks + NYMag + NYPDNews + nypost + nyrangers + nyuniversity + TimeOutNewYork + yankees, data=SLmatrix, family=binomial)
-summary(logitnewyorkers)
-plot(coef(logitnewyorkers)) 
-text(coef(logitnewyorkers), labels=names(residuals(logitnewyorkers)))
+# require('graphics')
+# logitnewyorkers <- glm(formula=isnewyorker ~ Brokelyn + BrooklynBased + BrooklynMuseum + BrooklynNets + citibikenyc + columbia + EmpireStateBldg + FDNY + giants + gothamist + Mets + MTA + nycgov + NYCMayorsOffice + NYCParks + NYCTBus + NYCTSubway + nydailynews + nyjets + NYKnicks + NYMag + NYPDNews + nypost + nyrangers + nyuniversity + TimeOutNewYork + yankees, data=SLmatrix, family=binomial)
+# summary(logitnewyorkers)
+# plot(coef(logitnewyorkers)) 
+# text(coef(logitnewyorkers), labels=names(residuals(logitnewyorkers)))
 
 totalNewYorkers <- sum(newyorkers$isnewyorker)
-totalBrokelyn <- sumnewyorkers$(Brokelyn)
+totalBrokelyn <- sum(newyorkers$Brokelyn)
 totalBrooklynMuseum <- sum(newyorkers$BrooklynMuseum)
 totalBrooklynBased <- sum(newyorkers$BrooklynBased)
 totalBrooklynNets <- sum(newyorkers$BrooklynNets)
@@ -48,10 +47,9 @@ totalnyuniversity <- sum(newyorkers$nyuniversity)
 totalTimeOutNewYork <- sum(newyorkers$TimeOutNewYork)
 totalyankees <- sum(newyorkers$yankees)
 
-barplot(height=c(42264, 52031), names.arg=(c('Brokelyn', 'BrooklynMuseum')))
-
 par(las=2)
 par(mar=c(5,8,4,2))
+
 barplot(height=c(totalBrokelyn, totalBrooklynBased, totalBrooklynMuseum, 
 totalBrooklynNets, totalCitibikenyc, totalcolumbia, totalEmpireStateBldg, totalFDNY,
 totalgiants, totalgothamist, totalMets, totalMTA, totalnycgov, totalNYCMayorsOffice, 
@@ -61,26 +59,26 @@ totalyankees), names.arg=(c('Brokelyn', 'BrooklynBased', 'BrooklynMuseum',
 'BrooklynNets', 'citibikenyc', 'columbia', 'EmpireStateBldg', 'FDNY', 'giants', 'gothamist',
 'Mets', 'MTA', 'nycgov', 'NYCMayorsOffice', 'NYCParks', 'NYCTBus', 'NYCTSubway', 'nydailynews',
 'nyjets', 'NYKnicks', 'NYMag', 'NYPDNews', 'nypost', 'nyrangers', 'nyuniversity', 'TimeOutNewYork',
-'yankees')), horiz=TRUE, col=brewer.pal(12, name="Set3"), legend=TRUE)
+'yankees')), horiz=TRUE, col=brewer.pal(12, name="Set3"), legend=TRUE, main='New Yorkers')
 
 
-col.sums <- apply(SLmatrix, 2, sum)
-
-newdata = subset(SLmatrix[,2:29], isnewyorker==1)
-newdata2 = subset(SLmatrix[,2:29], isnewyorker==0)
-
-class(SLmatrix$UserIDorig)
-SLmatrix$UserIDorig <- SLmatrix$UserID
-
-SLmatrix$UserID <- as.numeric(SLmatrix$UserID)
-
-weirds <- subset(SLmatrix, UserID != UserIDorig)
-
-newdata$predictNYers <- predict(logitnewyorkers, newdata=newdata, type='response')
-newdata2$predictNYers <-predict(logitnewyorkers, newdata=newdata2, type='response')
-
-summary(newdata$predictNYers)
-summary(newdata2$predictNYers)
+# col.sums <- apply(SLmatrix, 2, sum)
+# 
+# newdata = subset(SLmatrix[,2:29], isnewyorker==1)
+# newdata2 = subset(SLmatrix[,2:29], isnewyorker==0)
+# 
+# class(SLmatrix$UserIDorig)
+# SLmatrix$UserIDorig <- SLmatrix$UserID
+# 
+# SLmatrix$UserID <- as.numeric(SLmatrix$UserID)
+# 
+# weirds <- subset(SLmatrix, UserID != UserIDorig)
+# 
+# newdata$predictNYers <- predict(logitnewyorkers, newdata=newdata, type='response')
+# newdata2$predictNYers <-predict(logitnewyorkers, newdata=newdata2, type='response')
+# 
+# summary(newdata$predictNYers)
+# summary(newdata2$predictNYers)
 
 NONtotalBrokelyn <- sum(nonNYandUnKnown$Brokelyn)
 NONtotalBrooklynMuseum <- sum(nonNYandUnKnown$BrooklynMuseum)
@@ -119,4 +117,16 @@ barplot(height=c(NONtotalBrokelyn, NONtotalBrooklynBased, NONtotalBrooklynMuseum
                                              'BrooklynNets', 'citibikenyc', 'columbia', 'EmpireStateBldg', 'FDNY', 'giants', 'gothamist',
                                              'Mets', 'MTA', 'nycgov', 'NYCMayorsOffice', 'NYCParks', 'NYCTBus', 'NYCTSubway', 'nydailynews',
                                              'nyjets', 'NYKnicks', 'NYMag', 'NYPDNews', 'nypost', 'nyrangers', 'nyuniversity', 'TimeOutNewYork',
-                                             'yankees')), horiz=TRUE, col=brewer.pal(12, name="Set3"), main='Non-New Yorkers')
+                                             'yankees')), horiz=TRUE, col=brewer.pal(12, name="Set3"), main='Non-New Yorkers and Unknown')
+
+justSLmatrix <- subset(SLmatrix, select= -c(isnewyorker, UserID))
+justSLnewyorkers <- subset(newyorkers, select = -c(isnewyorker, UserID))
+justSLnonandunknown <- subset(nonNYandUnKnown, select = -c(isnewyorker, UserID))
+
+justSLmatrix$nSLfollowed <- apply(justSLmatrix, 1, sum)
+justSLnewyorkers$nSLfollowed <- apply(justSLnewyorkers, 1, sum)
+justSLnonandunknown$nSLfollowed <- apply(justSLnonandunknown, 1, sum)
+
+hist((subset(justSLmatrix$nSLfollowed, subset = (justSLmatrix$nSLfollowed> 0))), breaks=27, main='Histogram of number of social\n landmarks followed' )
+hist((subset(justSLnewyorkers$nSLfollowed, subset = (justSLnewyorkers$nSLfollowed> 0))), breaks=27, main='Histogram of number of social\n landmarks new yorkers followed' )
+hist((subset(justSLnonandunknown$nSLfollowed, subset = (justSLnonandunknown$nSLfollowed> 0))), breaks=27, main='Histogram of number of social\n landmarks non-new yorkers and\n unknowns followed' )

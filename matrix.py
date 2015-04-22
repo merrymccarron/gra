@@ -85,17 +85,22 @@ userlocations = allUserIDs['location'].values
 # if UserID is in any of the sociallandmark lists, looping 
 
 # initializing the matrix with zeros, so that changes only have to be made
-# if a match is found. Matrix has width = number of social landmarks + 1
-# for 
+# if a match is found. Matrix has width = number of social landmarks + 2
+# to accommodate the 'isnewyorker' and 'haslocationtext' flags in the matrix
 numberOfUserIDs = len(UserIDList)
-matrix = np.zeros((numberOfUserIDs, numberOfSocialLandmarks+1))
+matrix = np.zeros((numberOfUserIDs, numberOfSocialLandmarks+2))
 
 print "starting matrix loop"
 
 for i in range(numberOfUserIDs):
-    for j in strippedgazetteer:
-        if j in remove_punctuation(userlocations[i]):
-            matrix[i, numberOfSocialLandmarks] = 1
+    if userlocations[i] != 0.0:
+        if str(userlocations[i]) != 'nan':
+            matrix[i, numberOfSocialLandmarks+1] = 1
+            strippedlocation = remove_punctuation(userlocations[i])
+            for j in strippedgazetteer:
+                if j in strippedlocation:
+                    matrix[i, numberOfSocialLandmarks] = 1
+                    continue
     #IMPORTANT to keep the social landmark count each time a userid is
     # queried -- that's how it's stored in the correct matrix cell
     socialLandmarkCount = 0
@@ -106,10 +111,15 @@ for i in range(numberOfUserIDs):
     #social landmark count has to be reset each time a userid has been queried
     #through every one of the landmarks.
     socialLandmarkCount = 0
+    # keeping track of how far into the script we are... every 100K records
+    if i % 100000 == 0:
+        print 'now at index number: ' + str(i)
+        print datetime.datetime.now()
 
-# I need to add on the isnewyorker flag to the sociallandmark names for the 
-# matrix dataframe column headers.
+# I need to add on the isnewyorker flag and location text flag to the 
+# sociallandmark names for the matrix dataframe column headers.
 socialLandmarkNames.append('isnewyorker')
+socialLandmarkNames.append('haslocationtext')
 
 dfmatrix = pd.DataFrame(data=matrix, index=UserIDList, columns=socialLandmarkNames)
 
