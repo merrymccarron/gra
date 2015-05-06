@@ -48,11 +48,13 @@ def get_nyc_accounts(searchterm):
             break
         else:
             tempdf = pd.DataFrame(data=data)
-            with open('NYerSearchuserdetails.csv', 'a') as f:
+            with open(searchterm + 'Searchuserdetails.csv', 'a') as f:
                     tempdf['name'] = tempdf['name'].apply(lambda x: x.encode('ascii', 'ignore'))
                     tempdf['location'] = tempdf['location'].apply(lambda x: x.encode('ascii', 'ignore'))
                     tempdf['description'] = tempdf['description'].apply(lambda x: x.encode('ascii', 'ignore'))
-                    tempdf.to_csv(f, header=False, columns = ['id_str', 'location', 'screen_name', 'name', 'geo_enabled', 'followers_count', 'verified', 'time_zone', 'geo', 'statuses_count', 'description'], engine='python')#, encoding = 'utf-8')
+                    tempdf.to_csv(f, header=False, columns = ['id_str', 'location', 'screen_name', 
+                        'name', 'geo_enabled', 'followers_count', 'verified', 'time_zone', 'geo', 
+                        'statuses_count', 'description'], engine='python')#, encoding = 'utf-8')
             
             print "number of API calls:" + str(i)
             print 'sleeping now'
