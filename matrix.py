@@ -30,7 +30,9 @@ for i in GAZETTEER:
 #  from that script and put it directly in here. 
 allUserIDs = pd.read_csv('concat.csv', usecols = ['UserID', 'location'], error_bad_lines = 
     False, warn_bad_lines = True)
-# allUserIDs['location'] = np.zeros(len(allUserIDs['UserID']))
+
+allUserIDs['searchAPI'] = np.ones(len(allUserIDs['UserID']))
+# print allUserIDs.head(25)
 
 #Going through the file for each social landmark that contains just the
 # UserIDs for their followers, storing that list in a dataframe, which 
@@ -48,6 +50,7 @@ for csvfile in glob.glob('sociallandmarks/*details.csv'):
     print socialLandmarkHandle
     socialLandmarkNames.append(socialLandmarkHandle)
     df = pd.read_csv(csvfileUniv, usecols=['UserID', 'location'])
+    df['searchAPI'] = np.zeros(len(df['UserID']))
     #adding the social landmarks to a list of lists. The user ids for each 
     #social landmark is sorted so I can use binary search when creating
     #the matrix
@@ -60,35 +63,38 @@ for csvfile in glob.glob('sociallandmarks/*details.csv'):
 # print 'sorting social landmark followers list of lists'
 sociallandmarkFollowers = sorted(socialLandmarkFollowers, key=lambda x: x[0])
 
-# print "before dropping duplicates:"
-# print allUserIDs.shape
+print "before dropping duplicates:"
+print allUserIDs.shape
+print allUserIDs.head(10)
 
 print 'dropping duplicates from all user ids list'
 allUserIDs = allUserIDs.drop_duplicates(['UserID'])
 
-# print "after dropping duplicates"
-# print allUserIDs.shape
+print "after dropping duplicates"
+print allUserIDs.shape
+print allUserIDs.head(10)
 
 print 'converting all user id dataframe to numpy arrays'
-UserIDList = allUserIDs['UserID'].values
+UserIDList = allUserIDs['UserID'].values.astype(int)
 userlocations = allUserIDs['location'].values
+searchAPIvalues = allUserIDs['searchAPI'].values.astype(int)
+print searchAPIvalues[0:10]
 
 # Going through here is each userID we have from the search API AND
-# social landmark , checking
-# if UserID is in any of the sociallandmark lists, looping 
+# social landmark , checking if UserID is in any of the sociallandmark lists, looping 
 
 # initializing the matrix with zeros, so that changes only have to be made
-# if a match is found. Matrix has width = number of social landmarks + 2
-# to accommodate the 'isnewyorker' and 'haslocationtext' flags in the matrix
+# if a match is found. Matrix has width = number of social landmarks + 3
+# to accommodate the 'isnewyorker', 'haslocationtext', and 'searchAPI' flags in the matrix
 numberOfUserIDs = len(UserIDList)
-matrix = np.zeros((numberOfUserIDs, numberOfSocialLandmarks+2))
+# matrix = np.zeros((numberOfUserIDs, numberOfSocialLandmarks+2))
+matrix = np.zeros((numberOfUserIDs, numberOfSocialLandmarks+3))
 
 print "starting matrix loop"
 
 for i in range(numberOfUserIDs):
-    if userlocations[i] == 0.0:
-        matrix[i, numberOfSocialLandmarks+1] = 2
-    #     if str(userlocations[i]) != 'nan':
+    if searchAPIvalues[i] >= 1:
+        matrix[i, numberOfSocialLandmarks+2] = 1
     if isinstance(userlocations[i], basestring):
         matrix[i, numberOfSocialLandmarks+1] = 1
         strippedlocation = remove_punctuation(userlocations[i])
@@ -115,10 +121,15 @@ for i in range(numberOfUserIDs):
 # sociallandmark names for the matrix dataframe column headers.
 socialLandmarkNames.append('isnewyorker')
 socialLandmarkNames.append('haslocationtext')
+socialLandmarkNames.append('searchAPI')
+
+# searchAPIdf = pd.DataFrame(data=allUserIDs['searchAPI'], index=allUserIDs['UserID'])
 
 dfmatrix = pd.DataFrame(data=matrix, index=UserIDList, columns=socialLandmarkNames)
 
-dfmatrix.to_csv('mastermatrix.csv', index_label='UserID')
+# dfmatrix = merge(dfmatrix, searchAPIdf, how='inner', left_index=True, right_index=True)
+
+dfmatrix.to_csv('mastermatrix1.csv', index_label='UserID', float_format='%.0f')
 
 print dfmatrix.shape
 
