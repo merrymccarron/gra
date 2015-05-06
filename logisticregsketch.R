@@ -1,5 +1,5 @@
 require('RColorBrewer')
-SLmatrix <- read.csv('mastermatrix.csv')
+SLmatrix <- read.csv('mastermatrix1.csv')
 attach(SLmatrix)
 
 # logit1 <- glm(formula=isnewyorker ~ BrooklynMuseum, data=SLmatrix, family=binomial)

@@ -5,7 +5,6 @@ import oauth2 as oauth
 import json
 import time
 import datetime
-import itertools as it
 import string
 
 CONSUMER_KEY='FqjFRT1OHl6xyIGoq9uXSA'
@@ -30,14 +29,19 @@ def oauth_req(url, http_method="GET", post_body='', http_headers=None):
 # URL = 'https://api.twitter.com/1.1/users/search.json?q=New+York+City&page='+ pagecount +'&count=20'
 
 def get_nyc_accounts(searchterm):
-    data = {'UserID' : [], 'location' : [], 'screen_name' : [], 'name': [], 'geo_enabled': [], 'followers_count':[], 'verified':[], 'time_zone': [], 'geo': [], 'statuses_count': [], 'description': []}
+    data = {'UserID' : [], 'location' : [], 'screen_name' : [], 'name': [], 'geo_enabled': [], 
+        'followers_count':[], 'verified':[], 'time_zone': [], 'geo': [], 'statuses_count': [],
+        'description': []}
     df = pd.DataFrame(data)
     if not os.path.isfile(searchterm + 'Searchuserdetails.csv'):
-        df.to_csv(searchterm + 'Searchuserdetails.csv', header = True, columns = ['UserID', 'location', 'screen_name', 'name', 'geo_enabled', 'followers_count', 'verified', 'time_zone', 'geo', 'statuses_count', 'description'], engine='python')
+        df.to_csv(searchterm + 'Searchuserdetails.csv', header = True, columns = ['UserID', 
+            'location', 'screen_name', 'name', 'geo_enabled', 'followers_count', 'verified', 
+            'time_zone', 'geo', 'statuses_count', 'description'], engine='python')
 
     for i in range(50):
         #this api is limited to the first 1000 results
-        URL = 'https://api.twitter.com/1.1/users/search.json?q=' + searchterm + '&page='+ str(i) +'&count=20'
+        URL = 'https://api.twitter.com/1.1/users/search.json?q=' + searchterm + '&page='+ 
+            str(i) +'&count=20'
         try:
             data = oauth_req(URL)
         except:
@@ -59,8 +63,6 @@ def get_nyc_accounts(searchterm):
             print "number of API calls:" + str(i)
             print 'sleeping now'
             time.sleep(5)
-
-
 
 
 def main():
