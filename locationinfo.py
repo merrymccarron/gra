@@ -86,7 +86,7 @@ for i in df['location']:
     if i != 'None':
         numberOfUsersLocations +=1
         j = remove_punctuation(i).lower()
-        for k in strippedgazetteer:
+        for k in gazetteer:
             #for each location in our gazetteer, if one of those locations
             #appears in a user's location text, count them as a "new yorker"
             #continue to the next user once you find any matching location text
